@@ -10,4 +10,5 @@ export type TNoun = {
   germanExample: [string];
   englishExample: [string];
   banglaExample: [string];
+  isDeleted: boolean;
 };

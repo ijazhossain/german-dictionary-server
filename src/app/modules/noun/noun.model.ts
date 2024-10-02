@@ -42,5 +42,9 @@ const nounSchema = new Schema<TNoun>({
     type: [String],
     required: [true, 'Bangla example is required'],
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 export const Noun = model<TNoun>('Noun', nounSchema);
