@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { NounRoutes } from '../modules/noun/noun.route';
+import { WordRoutes } from '../modules/noun/word.route';
 
 const router = Router();
 const moduleRoutes = [
   {
-    path: '/noun',
-    route: NounRoutes,
+    path: '/word',
+    route: WordRoutes,
   },
 ];
 moduleRoutes.forEach((route) => router.use(route.path, route.route));
