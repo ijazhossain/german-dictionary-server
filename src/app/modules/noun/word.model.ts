@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose';
 
-import { Articles, Gender } from './word.constants';
+import { Articles, Gender, PartsOfSpeech } from './word.constants';
 import { TWord, TWordDetails } from './word.interface';
 const wordDetailsSchema = new Schema<TWordDetails>({
   banglaMeaning: {
@@ -28,6 +28,11 @@ const wordSchema = new Schema<TWord>({
   germanWord: {
     type: String,
     required: [true, 'German word is required'],
+  },
+  partsOfSpeech: {
+    type: String,
+    enum: PartsOfSpeech,
+    required: [true, 'Parts of speech is required'],
   },
   germanPlural: {
     type: String,
