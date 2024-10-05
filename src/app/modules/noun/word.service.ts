@@ -5,8 +5,29 @@ const createWordIntoDB = async (payload: TWord) => {
   const result = await Word.create(payload);
   return result;
 };
-const getAllWordFromDB = async () => {
-  const result = await Word.find();
+const getAllWordFromDB = async (searchQuery: Record<string, unknown>) => {
+  let query = {};
+  if (Object.keys(searchQuery).length) {
+    query = {
+      $or: [
+        { germanWord: { $regex: searchQuery?.searchQuery, $options: 'i' } }, // Matches germanWord
+        {
+          'details.englishMeaning': {
+            $regex: searchQuery?.searchQuery,
+            $options: 'i',
+          },
+        }, // Matches English Meaning in details
+        {
+          'details.banglaMeaning': {
+            $regex: searchQuery?.searchQuery,
+            $options: 'i',
+          },
+        }, // Matches Bangla Meaning in details
+      ],
+    };
+  }
+
+  const result = await Word.find(query);
   return result;
 };
 const getSingleWordFromDB = async (id: string) => {
