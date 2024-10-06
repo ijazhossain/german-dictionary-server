@@ -1,13 +1,11 @@
 import { z } from 'zod';
 import { Articles, Gender, PartsOfSpeech } from './word.constants';
 const wordDetailsValidationSchema = z.object({
-  body: z.object({
-    banglaMeaning: z.string(),
-    englishMeaning: z.string(),
-    germanExample: z.string(),
-    banglaExample: z.string(),
-    englishExample: z.string(),
-  }),
+  banglaMeaning: z.string(),
+  englishMeaning: z.string(),
+  germanExample: z.string(),
+  banglaExample: z.string(),
+  englishExample: z.string(),
 });
 const createWordValidationSchema = z.object({
   body: z.object({
@@ -16,7 +14,7 @@ const createWordValidationSchema = z.object({
     germanPlural: z.string().optional(),
     gender: z.enum([...(Gender as [string, ...string[]])]),
     article: z.enum([...(Articles as [string, ...string[]])]),
-    details: wordDetailsValidationSchema,
+    details: z.array(wordDetailsValidationSchema),
   }),
 });
 export const WordValidations = {

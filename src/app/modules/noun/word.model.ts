@@ -27,6 +27,7 @@ const wordDetailsSchema = new Schema<TWordDetails>({
 const wordSchema = new Schema<TWord>({
   germanWord: {
     type: String,
+    unique: true,
     required: [true, 'German word is required'],
   },
   partsOfSpeech: {

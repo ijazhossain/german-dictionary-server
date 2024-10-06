@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import { WordControllers } from './word.controller';
-import validateRequest from '../../middlewares/validateRequest';
+
 import { WordValidations } from './word.validation';
+import validateRequest from '../../middlewares/validateRequest';
 
 const router = Router();
 
