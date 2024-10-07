@@ -6,6 +6,7 @@ import { User } from './user.model';
 const createUserIntoDB = async (payload: TUser) => {
   //   console.log(payload);
   const isUserExists = await User.findOne({ email: payload.email });
+
   if (isUserExists) {
     throw new AppError(httpStatus.BAD_REQUEST, 'User already exists!!');
   }

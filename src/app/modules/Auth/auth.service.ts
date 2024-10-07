@@ -8,7 +8,7 @@ import config from '../../config';
 const loginUser = async (payload: TLoginUser) => {
   const user = await User.findOne({ email: payload.email });
   if (!user) {
-    throw new AppError(httpStatus.BAD_REQUEST, 'User already exists!!');
+    throw new AppError(httpStatus.BAD_REQUEST, 'User does not found!!');
   }
   const isDeleted = user?.isDeleted;
   if (isDeleted) {
