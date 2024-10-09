@@ -10,7 +10,7 @@ const moduleRoutes = [
     route: WordRoutes,
   },
   {
-    path: '/user',
+    path: '/users',
     route: UserRoutes,
   },
   {

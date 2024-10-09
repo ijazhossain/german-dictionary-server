@@ -9,4 +9,8 @@ router.post(
   validateRequest(UserValidations.createUserValidationSchema),
   UserControllers.createUser,
 );
+router.get('/admins', UserControllers.getAdmins);
+router.get('/faculties', UserControllers.getFaculties);
+router.get('/students', UserControllers.getStudents);
+router.delete('/students/:id', UserControllers.deleteSingleStudent);
 export const UserRoutes = router;

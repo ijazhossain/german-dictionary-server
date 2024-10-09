@@ -43,4 +43,18 @@ const userSchema = new Schema<TUser>(
     timestamps: true,
   },
 );
+userSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+userSchema.pre('findOne', async function (next) {
+  this.find({ isDeleted: { $ne: true } });
+
+  next();
+});
+
+userSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  next();
+});
 export const User = model<TUser>('User', userSchema);
