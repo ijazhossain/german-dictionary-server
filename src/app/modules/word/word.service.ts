@@ -10,19 +10,24 @@ const getAllWordFromDB = async (searchQuery: Record<string, unknown>) => {
   if (Object.keys(searchQuery).length) {
     query = {
       $or: [
-        { germanWord: { $regex: searchQuery?.searchQuery, $options: 'i' } }, // Matches germanWord
+        {
+          germanWord: {
+            $regex: `^${searchQuery?.searchQuery}$`,
+            $options: 'i',
+          },
+        }, // Exact case-insensitive match for germanWord
         {
           'details.englishMeaning': {
-            $regex: searchQuery?.searchQuery,
+            $regex: `^${searchQuery?.searchQuery}$`,
             $options: 'i',
           },
-        }, // Matches English Meaning in details
+        }, // Exact case-insensitive match for English Meaning in details
         {
           'details.banglaMeaning': {
-            $regex: searchQuery?.searchQuery,
+            $regex: `^${searchQuery?.searchQuery}$`,
             $options: 'i',
           },
-        }, // Matches Bangla Meaning in details
+        }, // Exact case-insensitive match for Bangla Meaning in details
       ],
     };
   }
