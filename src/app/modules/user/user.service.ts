@@ -2,7 +2,7 @@ import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { TUser } from './user.interface';
 import { User } from './user.model';
-
+type TQuery = { role?: string };
 const createUserIntoDB = async (payload: TUser) => {
   //   console.log(payload);
   const isUserExists = await User.findOne({ email: payload.email });
@@ -14,16 +14,20 @@ const createUserIntoDB = async (payload: TUser) => {
   return result;
 };
 
-const getAllAdminsFromDB = async () => {
-  const result = await User.find({ role: 'admin' });
-  return result;
-};
-const getAllFacultiesFromDB = async () => {
-  const result = await User.find({ role: 'faculty' });
-  return result;
-};
-const getAllStudentsFromDB = async () => {
-  const result = await User.find({ role: 'student' });
+const getAllUsersFromDB = async (userRole: TQuery) => {
+  const { role } = userRole;
+  const query: TQuery = {};
+  if (role) {
+    const validRoles = ['admin', 'faculty', 'student'];
+    if (!validRoles.includes(role)) {
+      throw new Error(
+        'Invalid role. Valid roles are: admin, faculty, student.',
+      );
+    }
+    query.role = role;
+  }
+
+  const result = await User.find(query);
   return result;
 };
 const deleteSingleUserFromDB = async (id: string) => {
@@ -38,10 +42,20 @@ const deleteSingleUserFromDB = async (id: string) => {
   );
   return result;
 };
+const updateSingleUserIntoDB = async (
+  id: string,
+  role: Record<string, unknown>,
+) => {
+  const user = await User.findOne({ _id: id });
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User does not found');
+  }
+  const result = await User.findOneAndUpdate({ _id: id }, role, { new: true });
+  return result;
+};
 export const UserServices = {
   createUserIntoDB,
-  getAllAdminsFromDB,
-  getAllFacultiesFromDB,
-  getAllStudentsFromDB,
+  getAllUsersFromDB,
   deleteSingleUserFromDB,
+  updateSingleUserIntoDB,
 };

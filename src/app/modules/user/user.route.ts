@@ -9,8 +9,8 @@ router.post(
   validateRequest(UserValidations.createUserValidationSchema),
   UserControllers.createUser,
 );
-router.get('/admins', UserControllers.getAdmins);
-router.get('/faculties', UserControllers.getFaculties);
-router.get('/students', UserControllers.getStudents);
+
+router.get('/', UserControllers.getUsers);
 router.delete('/students/:id', UserControllers.deleteSingleStudent);
+router.put('/students/:id', UserControllers.updateSingleUserRole);
 export const UserRoutes = router;

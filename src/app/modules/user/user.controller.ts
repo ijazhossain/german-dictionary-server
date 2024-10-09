@@ -13,26 +13,9 @@ const createUser = catchAsync(async (req, res) => {
     data: result,
   });
 });
-const getAdmins = catchAsync(async (req, res) => {
-  const result = await UserServices.getAllAdminsFromDB();
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'All faculties are retrieved successfully',
-    data: result,
-  });
-});
-const getFaculties = catchAsync(async (req, res) => {
-  const result = await UserServices.getAllFacultiesFromDB();
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'All faculties are retrieved successfully',
-    data: result,
-  });
-});
-const getStudents = catchAsync(async (req, res) => {
-  const result = await UserServices.getAllStudentsFromDB();
+
+const getUsers = catchAsync(async (req, res) => {
+  const result = await UserServices.getAllUsersFromDB(req.query);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -50,10 +33,20 @@ const deleteSingleStudent = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const updateSingleUserRole = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const role = req.body;
+  const result = await UserServices.updateSingleUserIntoDB(id, role);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User role updated successfully',
+    data: result,
+  });
+});
 export const UserControllers = {
   createUser,
-  getAdmins,
-  getFaculties,
-  getStudents,
+  getUsers,
   deleteSingleStudent,
+  updateSingleUserRole,
 };
