@@ -15,24 +15,34 @@ const getAllWordFromDB = async (searchQuery: Record<string, unknown>) => {
             $regex: `^${searchQuery?.searchQuery}$`,
             $options: 'i',
           },
-        }, // Exact case-insensitive match for germanWord
+        },
         {
           'details.englishMeaning': {
             $regex: `^${searchQuery?.searchQuery}$`,
             $options: 'i',
           },
-        }, // Exact case-insensitive match for English Meaning in details
+        },
         {
           'details.banglaMeaning': {
             $regex: `^${searchQuery?.searchQuery}$`,
             $options: 'i',
           },
-        }, // Exact case-insensitive match for Bangla Meaning in details
+        },
       ],
     };
   }
 
   const result = await Word.find(query);
+  return result;
+};
+const getSuggestionsFromDB = async (query: string) => {
+  const result = await Word.find({
+    $or: [
+      {
+        germanWord: { $regex: `^${query}`, $options: 'i' },
+      },
+    ],
+  }).limit(10);
   return result;
 };
 const getSingleWordFromDB = async (id: string) => {
@@ -57,6 +67,7 @@ const updateSingleWordIntoDB = async (id: string, payload: Partial<TWord>) => {
 export const WordServices = {
   createWordIntoDB,
   getAllWordFromDB,
+  getSuggestionsFromDB,
   getSingleWordFromDB,
   deleteSingleWordFromDB,
   updateSingleWordIntoDB,

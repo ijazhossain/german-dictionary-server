@@ -12,6 +12,7 @@ router.post(
   WordControllers.createWord,
 );
 router.get('/', WordControllers.getAllWord);
+router.get('/suggestion/:query', WordControllers.getSuggestions);
 router.get('/:id', WordControllers.getSingleWord);
 router.delete('/:id', WordControllers.deleteWord);
 router.patch('/:id', WordControllers.updateWord);

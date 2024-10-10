@@ -25,6 +25,16 @@ const getAllWord = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const getSuggestions = catchAsync(async (req, res) => {
+  const { query } = req.params;
+  const result = await WordServices.getSuggestionsFromDB(query);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Word suggestions is retrieved successfully',
+    data: result,
+  });
+});
 const getSingleWord = catchAsync(async (req, res) => {
   const { id } = req.params;
 
@@ -65,6 +75,7 @@ const updateWord = catchAsync(async (req: Request, res: Response) => {
 export const WordControllers = {
   createWord,
   getAllWord,
+  getSuggestions,
   getSingleWord,
   deleteWord,
   updateWord,
