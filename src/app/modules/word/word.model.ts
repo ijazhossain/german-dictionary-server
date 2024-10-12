@@ -60,4 +60,18 @@ const wordSchema = new Schema<TWord>({
     default: false,
   },
 });
+wordSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+wordSchema.pre('findOne', async function (next) {
+  this.find({ isDeleted: { $ne: true } });
+
+  next();
+});
+
+wordSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  next();
+});
 export const Word = model<TWord>('Word', wordSchema);
