@@ -14,9 +14,7 @@ const createWord = catchAsync(async (req: Request, res: Response) => {
   });
 });
 const getAllWord = catchAsync(async (req: Request, res: Response) => {
-  const searchQuery = req.query;
-
-  const result = await WordServices.getAllWordFromDB(searchQuery);
+  const result = await WordServices.getAllWordFromDB(req.query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

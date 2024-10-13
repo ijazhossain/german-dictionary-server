@@ -5,26 +5,26 @@ const createWordIntoDB = async (payload: TWord) => {
   const result = await Word.create(payload);
   return result;
 };
-const getAllWordFromDB = async (searchQuery: Record<string, unknown>) => {
-  let query = {};
-  if (Object.keys(searchQuery).length) {
-    query = {
+const getAllWordFromDB = async (query: Record<string, unknown>) => {
+  let searchableQuery = {};
+  if ((query.searchQuery as string).length) {
+    searchableQuery = {
       $or: [
         {
           germanWord: {
-            $regex: `^${searchQuery?.searchQuery}$`,
+            $regex: `^${query.searchQuery}$`,
             $options: 'i',
           },
         },
         {
           'details.englishMeaning': {
-            $regex: `^${searchQuery?.searchQuery}$`,
+            $regex: `^${query.searchQuery}$`,
             $options: 'i',
           },
         },
         {
           'details.banglaMeaning': {
-            $regex: `^${searchQuery?.searchQuery}$`,
+            $regex: `^${query.searchQuery}$`,
             $options: 'i',
           },
         },
@@ -32,8 +32,12 @@ const getAllWordFromDB = async (searchQuery: Record<string, unknown>) => {
     };
   }
 
-  const result = await Word.find(query);
-  return result;
+  const skip = (Number(query.page) - 1) * Number(query.limit);
+  const result = await Word.find(searchableQuery)
+    .skip(skip)
+    .limit(Number(query.limit));
+  const totalCount = await Word.countDocuments(searchableQuery); // To get the total number of documents
+  return { words: result, totalCount };
 };
 const getSuggestionsFromDB = async (query: string) => {
   const result = await Word.find({
