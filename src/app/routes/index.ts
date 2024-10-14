@@ -6,7 +6,7 @@ import { AuthRouter } from '../modules/Auth/auth.route';
 const router = Router();
 const moduleRoutes = [
   {
-    path: '/word',
+    path: '/words',
     route: WordRoutes,
   },
   {

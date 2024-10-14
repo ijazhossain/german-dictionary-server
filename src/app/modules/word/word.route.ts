@@ -13,7 +13,7 @@ router.post(
 );
 router.get('/', WordControllers.getAllWord);
 router.get('/suggestion/:query', WordControllers.getSuggestions);
-router.get('/:id', WordControllers.getSingleWord);
-router.delete('/:id', WordControllers.deleteWord);
-router.patch('/:id', WordControllers.updateWord);
+router.get('/word/:id', WordControllers.getSingleWord);
+router.delete('/word/:id', WordControllers.deleteWord);
+router.patch('/word/:id', WordControllers.updateWord);
 export const WordRoutes = router;

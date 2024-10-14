@@ -1,5 +1,5 @@
-export const Articles = ['der', 'die', 'das'];
-export const Gender = ['masculine', 'feminine', 'neuter'];
+export const Articles = ['der', 'die', 'das', ''];
+export const Gender = ['masculine', 'feminine', 'neuter', ''];
 export const PartsOfSpeech = [
   'nomen',
   'verb',

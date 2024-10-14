@@ -6,6 +6,7 @@ import { createToken } from './auth.utils';
 import config from '../../config';
 
 const loginUser = async (payload: TLoginUser) => {
+  //console.log(config.jwt_expires_in);
   const user = await User.findOne({ email: payload.email });
   if (!user) {
     throw new AppError(httpStatus.BAD_REQUEST, 'User does not found!!');

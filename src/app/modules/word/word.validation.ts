@@ -12,8 +12,8 @@ const createWordValidationSchema = z.object({
     germanWord: z.string(),
     partsOfSpeech: z.enum([...(PartsOfSpeech as [string, ...string[]])]),
     germanPlural: z.string().optional(),
-    gender: z.enum([...(Gender as [string, ...string[]])]),
-    article: z.enum([...(Articles as [string, ...string[]])]),
+    gender: z.enum([...(Gender as [string, ...string[]])]).optional(),
+    article: z.enum([...(Articles as [string, ...string[]])]).optional(),
     details: z.array(wordDetailsValidationSchema),
   }),
 });
