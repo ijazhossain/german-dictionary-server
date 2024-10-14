@@ -1,7 +1,12 @@
 import { model, Schema } from 'mongoose';
 
-import { Articles, Gender, PartsOfSpeech } from './word.constants';
-import { TWord, TWordDetails } from './word.interface';
+import { Articles, Gender, PartsOfSpeech, VerbType } from './word.constants';
+import { TConjugation, TWord, TWordDetails } from './word.interface';
+const ConjugationSchema = new Schema<TConjugation>({
+  german: { type: String },
+  english: { type: String },
+  bangla: { type: String },
+});
 const wordDetailsSchema = new Schema<TWordDetails>({
   banglaMeaning: {
     type: String,
@@ -55,6 +60,33 @@ const wordSchema = new Schema<TWord>({
       required: [true, 'Word details is required'],
     },
   ],
+  verbType: { type: String, enum: VerbType },
+  verbConjugations: {
+    präsens: {
+      ich: { type: ConjugationSchema },
+      du: { type: ConjugationSchema },
+      'er/sie/es': { type: ConjugationSchema },
+      wir: { type: ConjugationSchema },
+      ihr: { type: ConjugationSchema },
+      sie: { type: ConjugationSchema },
+    },
+    präteritum: {
+      ich: { type: ConjugationSchema },
+      du: { type: ConjugationSchema },
+      'er/sie/es': { type: ConjugationSchema },
+      wir: { type: ConjugationSchema },
+      ihr: { type: ConjugationSchema },
+      sie: { type: ConjugationSchema },
+    },
+    perfekt: {
+      ich: { type: ConjugationSchema },
+      du: { type: ConjugationSchema },
+      'er/sie/es': { type: ConjugationSchema },
+      wir: { type: ConjugationSchema },
+      ihr: { type: ConjugationSchema },
+      sie: { type: ConjugationSchema },
+    },
+  },
   isDeleted: {
     type: Boolean,
     default: false,

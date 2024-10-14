@@ -19,6 +19,12 @@ export type TWordDetails = {
   banglaExample: string;
   englishExample: string;
 };
+export type TVerbType = 'regular' | 'irregular';
+export type TConjugation = {
+  german?: string;
+  english?: string;
+  bangla?: string;
+};
 export type TWord = {
   germanWord: string;
   partsOfSpeech: TPartsOfSpeech;
@@ -26,5 +32,32 @@ export type TWord = {
   gender?: TGender;
   article?: TArticle;
   details: [TWordDetails];
+  verbType?: TVerbType;
+  verbConjugations?: {
+    präsens: {
+      ich: TConjugation;
+      du: TConjugation;
+      'er/sie/es': TConjugation;
+      wir: TConjugation;
+      ihr: TConjugation;
+      sie: TConjugation;
+    };
+    präteritum: {
+      ich: TConjugation;
+      du: TConjugation;
+      'er/sie/es': TConjugation;
+      wir: TConjugation;
+      ihr: TConjugation;
+      sie: TConjugation;
+    };
+    perfekt: {
+      ich: TConjugation;
+      du: TConjugation;
+      'er/sie/es': TConjugation;
+      wir: TConjugation;
+      ihr: TConjugation;
+      sie: TConjugation;
+    };
+  };
   isDeleted: boolean;
 };
