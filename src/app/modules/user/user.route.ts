@@ -2,6 +2,8 @@ import { Router } from 'express';
 import validateRequest from '../../middlewares/validateRequest';
 import { UserValidations } from './user.validation';
 import { UserControllers } from './user.controller';
+import auth from '../../utils/auth';
+import { USER_ROLE } from './user.constant';
 
 const router = Router();
 router.post(
@@ -10,7 +12,19 @@ router.post(
   UserControllers.createUser,
 );
 
-router.get('/', UserControllers.getUsers);
-router.delete('/students/:id', UserControllers.deleteSingleStudent);
-router.put('/students/:id', UserControllers.updateSingleUserRole);
+router.get(
+  '/',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+  UserControllers.getUsers,
+);
+router.delete(
+  '/students/:id',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+  UserControllers.deleteSingleStudent,
+);
+router.put(
+  '/students/:id',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+  UserControllers.updateSingleUserRole,
+);
 export const UserRoutes = router;

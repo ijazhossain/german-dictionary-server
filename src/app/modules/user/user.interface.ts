@@ -1,3 +1,5 @@
+import { USER_ROLE } from './user.constant';
+
 export type TName = {
   firstName: string;
   lastName: string;
@@ -11,3 +13,4 @@ export type TUser = {
   passwordChangedAt?: Date;
   isDeleted: boolean;
 };
+export type TUserRole = keyof typeof USER_ROLE;
