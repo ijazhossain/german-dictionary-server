@@ -33,7 +33,13 @@ const userSchema = new Schema<TUser>(
     passwordChangedAt: {
       type: Date,
     },
-
+    bookmarks: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Word',
+        default: [],
+      },
+    ],
     isDeleted: {
       type: Boolean,
       default: false,

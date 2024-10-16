@@ -18,13 +18,18 @@ router.get(
   UserControllers.getUsers,
 );
 router.delete(
-  '/students/:id',
+  '/student/:id',
   auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   UserControllers.deleteSingleStudent,
 );
 router.put(
-  '/students/:id',
+  '/student/:id',
   auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   UserControllers.updateSingleUserRole,
+);
+router.get('/student/bookmarks/:id', UserControllers.getBookmarks);
+router.get(
+  '/student/bookmarks/populate/:id',
+  UserControllers.getPopulateBookmarks,
 );
 export const UserRoutes = router;

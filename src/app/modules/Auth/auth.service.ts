@@ -20,6 +20,7 @@ const loginUser = async (payload: TLoginUser) => {
     throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked');
   }
   const jwtPayload = {
+    userId: user._id,
     email: user.email,
     role: user.role,
   };

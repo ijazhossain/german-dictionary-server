@@ -53,9 +53,21 @@ const updateSingleUserIntoDB = async (
   const result = await User.findOneAndUpdate({ _id: id }, role, { new: true });
   return result;
 };
+const getBookmarksFromDB = async (userId: string) => {
+  const result = await User.findById(userId).select({ bookmarks: 1 });
+  return result;
+};
+const getPopulateBookmarksFromDB = async (userId: string) => {
+  const result = await User.findById(userId)
+    .select({ bookmarks: 1 })
+    .populate('bookmarks');
+  return result;
+};
 export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
   deleteSingleUserFromDB,
   updateSingleUserIntoDB,
+  getBookmarksFromDB,
+  getPopulateBookmarksFromDB,
 };

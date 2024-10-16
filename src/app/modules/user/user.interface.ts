@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import { USER_ROLE } from './user.constant';
 
 export type TName = {
@@ -11,6 +12,7 @@ export type TUser = {
   role: 'superAdmin' | 'admin' | 'student' | 'faculty';
   status: 'in-progress' | 'blocked';
   passwordChangedAt?: Date;
+  bookmarks: [Types.ObjectId];
   isDeleted: boolean;
 };
 export type TUserRole = keyof typeof USER_ROLE;

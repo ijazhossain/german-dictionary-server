@@ -23,6 +23,16 @@ const getAllWord = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const getWordBySearch = catchAsync(async (req: Request, res: Response) => {
+  const result = await WordServices.getAllWordFromDB(req.query);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Search Word is retrieved successfully',
+    data: result,
+  });
+});
 const getSuggestions = catchAsync(async (req, res) => {
   const { query } = req.params;
   const result = await WordServices.getSuggestionsFromDB(query);
@@ -69,12 +79,45 @@ const updateWord = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
-
+const bookmarkWord = catchAsync(async (req, res) => {
+  const { userId, wordId } = req.params;
+  const result = await WordServices.bookmarkWordIntoDB(userId, wordId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Word is bookmarked successfully',
+    data: result,
+  });
+});
+const removeBookmarkWord = catchAsync(async (req, res) => {
+  const { userId, wordId } = req.params;
+  const result = await WordServices.removeBookmarkFromDB(userId, wordId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Word is removed from bookmark successfully',
+    data: result,
+  });
+});
+const getSingleBookmarkDetails = catchAsync(async (req, res) => {
+  const { wordId } = req.params;
+  const result = await WordServices.getSingleBookmarkDetailsFromDB(wordId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Single bookmark details are retrieved successfully',
+    data: result,
+  });
+});
 export const WordControllers = {
   createWord,
   getAllWord,
+  getWordBySearch,
   getSuggestions,
   getSingleWord,
   deleteWord,
   updateWord,
+  bookmarkWord,
+  removeBookmarkWord,
+  getSingleBookmarkDetails,
 };

@@ -44,9 +44,31 @@ const updateSingleUserRole = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getBookmarks = catchAsync(async (req, res) => {
+  const { id: userId } = req.params;
+  const result = await UserServices.getBookmarksFromDB(userId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'All bookmarks for this user is retrieved successfully',
+    data: result,
+  });
+});
+const getPopulateBookmarks = catchAsync(async (req, res) => {
+  const { id: userId } = req.params;
+  const result = await UserServices.getPopulateBookmarksFromDB(userId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'All bookmarks for this user is retrieved successfully',
+    data: result,
+  });
+});
 export const UserControllers = {
   createUser,
   getUsers,
   deleteSingleStudent,
   updateSingleUserRole,
+  getBookmarks,
+  getPopulateBookmarks,
 };

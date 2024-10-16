@@ -19,8 +19,13 @@ router.get(
   auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty),
   WordControllers.getAllWord,
 );
+router.get('/search-word', WordControllers.getWordBySearch);
 router.get('/suggestion/:query', WordControllers.getSuggestions);
-router.get('/word/:id', WordControllers.getSingleWord);
+router.get(
+  '/word/:id',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty),
+  WordControllers.getSingleWord,
+);
 router.delete(
   '/word/:id',
   auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty),
@@ -30,5 +35,14 @@ router.patch(
   '/word/:id',
   auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty),
   WordControllers.updateWord,
+);
+router.patch('/add-bookmark/:userId/:wordId', WordControllers.bookmarkWord);
+router.patch(
+  '/remove-bookmark/:userId/:wordId',
+  WordControllers.removeBookmarkWord,
+);
+router.get(
+  '/word/bookmarks/bookmark/:wordId',
+  WordControllers.getSingleBookmarkDetails,
 );
 export const WordRoutes = router;
