@@ -63,6 +63,7 @@ const getPopulateBookmarksFromDB = async (userId: string) => {
     .populate('bookmarks');
   return result;
 };
+
 export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
