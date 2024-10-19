@@ -109,6 +109,15 @@ const getSingleBookmarkDetails = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const generateQuiz = catchAsync(async (req, res) => {
+  const questions = await WordServices.generateQuizFromDB();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Quiz is generate successfully',
+    data: questions,
+  });
+});
 export const WordControllers = {
   createWord,
   getAllWord,
@@ -120,4 +129,5 @@ export const WordControllers = {
   bookmarkWord,
   removeBookmarkWord,
   getSingleBookmarkDetails,
+  generateQuiz,
 };
