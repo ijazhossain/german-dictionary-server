@@ -116,56 +116,54 @@ const getSingleBookmarkDetailsFromDB = async (wordId: string) => {
   return result;
 };
 const generateQuizFromDB = async () => {
+  // Utility function to shuffle array
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const shuffleArray = (array: any[]) => array.sort(() => Math.random() - 0.5);
+
+  // Fetch 10 random words from the database
   const words = await Word.aggregate([{ $sample: { size: 10 } }]);
 
+  // Generate quiz questions
   const questions = await Promise.all(
-    words.flatMap(async (word) => {
+    words.map(async (word) => {
+      // Fetch wrong choices for parts of speech question
       const wrongChoices = await Word.aggregate([
         { $match: { _id: { $ne: word._id } } },
         { $sample: { size: 3 } },
       ]);
 
-      const englishQuestion = {
-        question: `What is the meaning of the German word "${word.germanWord}" in English?`,
+      // Get unique parts of speech from the fetched words
+      const uniquePartsOfSpeech = [
+        ...new Set(words.map((w) => w.partsOfSpeech)),
+      ];
+
+      // Create a question for meaning
+      const meaningQuestion = {
+        question: `What is the meaning of the German word "${word.germanWord}"?`,
         choices: shuffleArray([
-          word.details[0].englishMeaning,
-          ...wrongChoices.map((w) => w.details[0].englishMeaning),
+          word.details[0].englishMeaning, // Correct answer
+          ...wrongChoices.map((w) => w.details[0].englishMeaning), // Wrong answers
         ]),
         correctAnswer: word.details[0].englishMeaning,
       };
 
-      const banglaQuestion = {
-        question: `What is the meaning of the German word "${word.germanWord}" in Bangla?`,
-        choices: shuffleArray([
-          word.details[0].banglaMeaning,
-          ...wrongChoices.map((w) => w.details[0].banglaMeaning),
-        ]),
-        correctAnswer: word.details[0].banglaMeaning,
-      };
-      // Parts of speech question
-      const wrongPartsOfSpeech = await Word.aggregate([
-        { $match: { _id: { $ne: word._id } } },
-        { $sample: { size: 3 } },
-      ]);
-
+      // Create a question for parts of speech
       const partsOfSpeechQuestion = {
-        question: `What is the part of speech of the German word "${word.germanWord}"?`,
+        question: `What is the parts of speech of the German word "${word.germanWord}"?`,
         choices: shuffleArray([
-          word.partsOfSpeech,
-          ...wrongPartsOfSpeech.map((w) => w.partsOfSpeech),
+          word.partsOfSpeech, // Correct answer
+          ...uniquePartsOfSpeech
+            .filter((pos) => pos !== word.partsOfSpeech)
+            .slice(0, 3), // Get 3 different wrong answers
         ]),
         correctAnswer: word.partsOfSpeech,
       };
-      return [englishQuestion, banglaQuestion, partsOfSpeechQuestion]; // Return both questions
+
+      return [meaningQuestion, partsOfSpeechQuestion];
     }),
   );
 
-  const allQuestions = shuffleArray(questions.flat());
-
-  // Return exactly 10 questions
-  return allQuestions.slice(0, 10);
+  return questions.flat(); // Flatten the array of questions
 };
 
 export const WordServices = {
