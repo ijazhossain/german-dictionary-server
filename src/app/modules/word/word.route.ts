@@ -41,5 +41,9 @@ router.patch(
   '/remove-bookmark/:userId/:wordId',
   WordControllers.removeBookmarkWord,
 );
+router.get(
+  '/word/bookmarks/bookmark/:wordId',
+  WordControllers.getSingleBookmarkDetails,
+);
 router.get('/generate-quiz', WordControllers.generateQuiz);
 export const WordRoutes = router;

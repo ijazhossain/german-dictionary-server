@@ -117,8 +117,8 @@ const getSingleBookmarkDetailsFromDB = async (wordId: string) => {
 };
 const generateQuizFromDB = async () => {
   // Utility function to shuffle array
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const shuffleArray = (array: any[]) => array.sort(() => Math.random() - 0.5);
+  const shuffleArray = <T>(array: T[]): T[] =>
+    array.sort(() => Math.random() - 0.5);
 
   // Fetch 10 random words from the database
   const words = await Word.aggregate([{ $sample: { size: 10 } }]);
@@ -137,6 +137,22 @@ const generateQuizFromDB = async () => {
         ...new Set(words.map((w) => w.partsOfSpeech)),
       ];
 
+      // Ensure we have at least 3 wrong parts of speech choices
+      const filteredWrongChoices = uniquePartsOfSpeech.filter(
+        (pos) => pos !== word.partsOfSpeech,
+      );
+
+      // If there are not enough wrong choices, fill with random ones (this can be replaced with a predefined fallback if desired)
+      while (filteredWrongChoices.length < 3) {
+        const randomPos =
+          uniquePartsOfSpeech[
+            Math.floor(Math.random() * uniquePartsOfSpeech.length)
+          ];
+        if (!filteredWrongChoices.includes(randomPos)) {
+          filteredWrongChoices.push(randomPos);
+        }
+      }
+
       // Create a question for meaning
       const meaningQuestion = {
         question: `What is the meaning of the German word "${word.germanWord}"?`,
@@ -152,9 +168,7 @@ const generateQuizFromDB = async () => {
         question: `What is the parts of speech of the German word "${word.germanWord}"?`,
         choices: shuffleArray([
           word.partsOfSpeech, // Correct answer
-          ...uniquePartsOfSpeech
-            .filter((pos) => pos !== word.partsOfSpeech)
-            .slice(0, 3), // Get 3 different wrong answers
+          ...filteredWrongChoices.slice(0, 3), // Use the 3 wrong choices
         ]),
         correctAnswer: word.partsOfSpeech,
       };
