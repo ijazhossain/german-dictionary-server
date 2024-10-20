@@ -1,6 +1,13 @@
 import { model, Schema } from 'mongoose';
 
-import { Articles, Gender, PartsOfSpeech, VerbType } from './word.constants';
+import {
+  Articles,
+  Gender,
+  PartsOfSpeech,
+  VerbCase,
+  VerbType,
+  WordLevel,
+} from './word.constants';
 import { TConjugation, TWord, TWordDetails } from './word.interface';
 const ConjugationSchema = new Schema<TConjugation>({
   german: { type: String },
@@ -54,6 +61,13 @@ const wordSchema = new Schema<TWord>({
     type: String,
     enum: { values: Articles, message: 'Article should be der, die or das' },
   },
+  wordLevel: {
+    type: String,
+    enum: {
+      values: WordLevel,
+      message: 'Word level should be a1, a2, b1, b2, c1 or c2',
+    },
+  },
   details: [
     {
       type: wordDetailsSchema,
@@ -61,6 +75,7 @@ const wordSchema = new Schema<TWord>({
     },
   ],
   verbType: { type: String, enum: VerbType },
+  verbCase: { type: String, enum: VerbCase },
   verbConjugations: {
     präsens: {
       ich: { type: ConjugationSchema },

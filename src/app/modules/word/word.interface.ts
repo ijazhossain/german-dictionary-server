@@ -20,6 +20,8 @@ export type TWordDetails = {
   englishExample: string;
 };
 export type TVerbType = 'regular' | 'irregular';
+export type TVerbCase = 'nominativ' | 'akkusativ' | 'dativ' | 'reflexive';
+export type TWordLevel = 'a1' | 'a2' | 'b1' | 'b2' | 'c1' | 'c2';
 export type TConjugation = {
   german?: string;
   english?: string;
@@ -30,9 +32,11 @@ export type TWord = {
   partsOfSpeech: TPartsOfSpeech;
   germanPlural?: string;
   gender?: TGender;
+  wordLevel?: TWordLevel;
   article?: TArticle;
   details: [TWordDetails];
   verbType?: TVerbType;
+  verbCase?: TVerbCase;
   verbConjugations?: {
     präsens: {
       ich: TConjugation;
