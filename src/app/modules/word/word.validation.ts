@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Articles, Gender, PartsOfSpeech, VerbType } from './word.constants';
+import { Articles, PartsOfSpeech, VerbType } from './word.constants';
 const wordDetailsValidationSchema = z.object({
   banglaMeaning: z.string(),
   englishMeaning: z.string(),
@@ -49,7 +49,6 @@ const createWordValidationSchema = z.object({
     germanWord: z.string(),
     partsOfSpeech: z.enum([...(PartsOfSpeech as [string, ...string[]])]),
     germanPlural: z.string().optional(),
-    gender: z.enum([...(Gender as [string, ...string[]])]).optional(),
     article: z.enum([...(Articles as [string, ...string[]])]).optional(),
     verbTypes: z.enum([...(VerbType as [string, ...string[]])]).optional(),
     verbConjugations: createConjugationValidationSchema.optional(),

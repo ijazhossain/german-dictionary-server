@@ -2,7 +2,6 @@ import { model, Schema } from 'mongoose';
 
 import {
   Articles,
-  Gender,
   PartsOfSpeech,
   VerbCase,
   VerbType,
@@ -49,13 +48,6 @@ const wordSchema = new Schema<TWord>({
   },
   germanPlural: {
     type: String,
-  },
-  gender: {
-    type: String,
-    enum: {
-      values: Gender,
-      message: 'Gender should be masculine, feminin or neuter ',
-    },
   },
   article: {
     type: String,

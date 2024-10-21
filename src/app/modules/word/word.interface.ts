@@ -1,4 +1,3 @@
-type TGender = 'masculine' | 'feminine' | 'neuter';
 type TArticle = 'der' | 'die' | 'das';
 type TPartsOfSpeech =
   | 'nomen'
@@ -31,7 +30,6 @@ export type TWord = {
   germanWord: string;
   partsOfSpeech: TPartsOfSpeech;
   germanPlural?: string;
-  gender?: TGender;
   wordLevel?: TWordLevel;
   article?: TArticle;
   details: [TWordDetails];
