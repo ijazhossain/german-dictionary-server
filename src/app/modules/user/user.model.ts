@@ -84,15 +84,15 @@ userSchema.post('save', function (doc, next) {
   doc.password = '';
   next();
 });
-userSchema.statics.isUserExistsByCustomId = async function (id: string) {
-  return await User.findOne({ id }).select('+password');
+userSchema.statics.isUserExists = async function (email: string) {
+  return await User.findOne({ email: email }).select('+password');
 };
 //matching the passwords
 userSchema.statics.isPasswordMatched = async function (
   plainTextPassword,
   hashedPassword,
 ) {
-  console.log({ plainTextPassword, hashedPassword });
+  // console.log({ plainTextPassword, hashedPassword });
   return await bcrypt.compare(plainTextPassword, hashedPassword);
 };
 //checking if the JWT issued before the password changed

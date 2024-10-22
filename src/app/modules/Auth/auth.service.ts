@@ -9,7 +9,7 @@ import { JwtPayload } from 'jsonwebtoken';
 
 const loginUser = async (payload: TLoginUser) => {
   //console.log(config.jwt_expires_in);
-  const user = await User.findOne({ email: payload.email });
+  const user = await User.isUserExists(payload?.email);
   if (!user) {
     throw new AppError(httpStatus.BAD_REQUEST, 'User does not found!!');
   }
@@ -20,6 +20,10 @@ const loginUser = async (payload: TLoginUser) => {
   const userStatus = user?.status;
   if (userStatus === 'blocked') {
     throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked');
+  }
+  //checking if the password is correct
+  if (!(await User.isPasswordMatched(payload.password, user?.password))) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Password does not match!');
   }
   const jwtPayload = {
     userId: user._id,
@@ -65,7 +69,7 @@ const changePassword = async (
 
   await User.findOneAndUpdate(
     {
-      id: userData.userId,
+      email: userData.email,
       role: userData.role,
     },
     {

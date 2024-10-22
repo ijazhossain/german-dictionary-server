@@ -7,6 +7,7 @@ export type TName = {
   lastName: string;
 };
 export type TUser = {
+  _id?: Types.ObjectId;
   name: TName;
   email: string;
   password: string;
@@ -17,7 +18,7 @@ export type TUser = {
   isDeleted: boolean;
 };
 export interface UserModel extends Model<TUser> {
-  isUserExistsByCustomId(id: string): Promise<TUser>;
+  isUserExists(id: string): Promise<TUser>;
   isPasswordMatched(
     plainTextPassword: string,
     hashedPassword: string,
