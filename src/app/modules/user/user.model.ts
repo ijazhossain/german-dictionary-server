@@ -1,10 +1,12 @@
 import { model, Schema } from 'mongoose';
-import { TName, TUser } from './user.interface';
+import { TName, TUser, UserModel } from './user.interface';
+import bcrypt from 'bcrypt';
+import config from '../../config';
 const userNameSchema = new Schema<TName>({
   firstName: { type: String, required: [true, 'First name is required'] },
   lastName: { type: String, required: [true, 'Last name is required'] },
 });
-const userSchema = new Schema<TUser>(
+const userSchema = new Schema<TUser, UserModel>(
   {
     name: {
       type: userNameSchema,
@@ -18,6 +20,7 @@ const userSchema = new Schema<TUser>(
     password: {
       type: String,
       required: true,
+      select: 0,
     },
 
     role: {
@@ -63,4 +66,43 @@ userSchema.pre('aggregate', function (next) {
   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
   next();
 });
-export const User = model<TUser>('User', userSchema);
+//pre save middleware hook
+userSchema.pre('save', async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+  //hashing password and save into DB
+
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_round),
+  );
+  next();
+});
+
+//post save middleware
+userSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
+});
+userSchema.statics.isUserExistsByCustomId = async function (id: string) {
+  return await User.findOne({ id }).select('+password');
+};
+//matching the passwords
+userSchema.statics.isPasswordMatched = async function (
+  plainTextPassword,
+  hashedPassword,
+) {
+  console.log({ plainTextPassword, hashedPassword });
+  return await bcrypt.compare(plainTextPassword, hashedPassword);
+};
+//checking if the JWT issued before the password changed
+userSchema.statics.isJWTIssuedBeforePasswordChanged = function (
+  passwordChangedTimestamp: Date,
+  jwtIssuedTimestamp: number,
+) {
+  const passwordChangedTime =
+    new Date(passwordChangedTimestamp).getTime() / 1000;
+
+  return passwordChangedTime > jwtIssuedTimestamp;
+};
+export const User = model<TUser, UserModel>('User', userSchema);

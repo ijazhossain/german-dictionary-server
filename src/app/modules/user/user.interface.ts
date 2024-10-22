@@ -1,4 +1,5 @@
-import { Types } from 'mongoose';
+/* eslint-disable no-unused-vars */
+import { Model, Types } from 'mongoose';
 import { USER_ROLE } from './user.constant';
 
 export type TName = {
@@ -15,4 +16,15 @@ export type TUser = {
   bookmarks: [Types.ObjectId];
   isDeleted: boolean;
 };
+export interface UserModel extends Model<TUser> {
+  isUserExistsByCustomId(id: string): Promise<TUser>;
+  isPasswordMatched(
+    plainTextPassword: string,
+    hashedPassword: string,
+  ): Promise<boolean>;
+  isJWTIssuedBeforePasswordChanged(
+    passwordChangedTimestamp: Date,
+    jwtIssuedTimestamp: number,
+  ): boolean;
+}
 export type TUserRole = keyof typeof USER_ROLE;
