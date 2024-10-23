@@ -17,6 +17,11 @@ router.get(
   auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   UserControllers.getUsers,
 );
+router.get(
+  '/user/:email',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty),
+  UserControllers.getSingleUser,
+);
 router.delete(
   '/student/:id',
   auth(USER_ROLE.superAdmin, USER_ROLE.admin),

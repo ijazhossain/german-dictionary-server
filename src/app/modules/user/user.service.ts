@@ -25,16 +25,16 @@ const getAllUsersFromDB = async (query: TQuery) => {
     }
     searchQuery.role = query.role;
   }
-
-  /* const result = await User.find(query);
-  return result; */
   const skip = (Number(query.page) - 1) * Number(query.limit);
   const result = await User.find(searchQuery)
-    .sort({ _id: -1 })
     .skip(skip)
     .limit(Number(query.limit));
   const totalCount = await User.countDocuments(searchQuery); // To get the total number of documents
   return { users: result, totalCount };
+};
+const getSingleUserFromDB = async (email: string) => {
+  const result = await User.findOne({ email });
+  return result;
 };
 const deleteSingleUserFromDB = async (id: string) => {
   const user = await User.findOne({ _id: id });
@@ -73,6 +73,7 @@ const getPopulateBookmarksFromDB = async (userId: string) => {
 export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
+  getSingleUserFromDB,
   deleteSingleUserFromDB,
   updateSingleUserIntoDB,
   getBookmarksFromDB,

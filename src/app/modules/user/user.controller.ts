@@ -23,6 +23,18 @@ const getUsers = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getSingleUser = catchAsync(async (req, res) => {
+  const { email } = req.params;
+
+  const result = await UserServices.getSingleUserFromDB(email);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Single user is retrieved successfully',
+    data: result,
+  });
+});
 const deleteSingleStudent = catchAsync(async (req, res) => {
   const { id } = req.params;
   const result = await UserServices.deleteSingleUserFromDB(id);
@@ -67,6 +79,7 @@ const getPopulateBookmarks = catchAsync(async (req, res) => {
 export const UserControllers = {
   createUser,
   getUsers,
+  getSingleUser,
   deleteSingleStudent,
   updateSingleUserRole,
   getBookmarks,
