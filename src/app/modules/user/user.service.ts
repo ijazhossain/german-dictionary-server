@@ -2,7 +2,7 @@ import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { TUser } from './user.interface';
 import { User } from './user.model';
-type TQuery = { role?: string };
+type TQuery = { role?: string; page?: string; limit?: string };
 const createUserIntoDB = async (payload: TUser) => {
   //   console.log(payload);
   const isUserExists = await User.findOne({ email: payload.email });
@@ -14,21 +14,27 @@ const createUserIntoDB = async (payload: TUser) => {
   return result;
 };
 
-const getAllUsersFromDB = async (userRole: TQuery) => {
-  const { role } = userRole;
-  const query: TQuery = {};
-  if (role) {
-    const validRoles = ['admin', 'faculty', 'student'];
-    if (!validRoles.includes(role)) {
+const getAllUsersFromDB = async (query: TQuery) => {
+  const searchQuery: TQuery = {};
+  if (query?.role) {
+    const validRoles = ['superAdmin', 'admin', 'faculty', 'student'];
+    if (!validRoles.includes(query.role)) {
       throw new Error(
         'Invalid role. Valid roles are: admin, faculty, student.',
       );
     }
-    query.role = role;
+    searchQuery.role = query.role;
   }
 
-  const result = await User.find(query);
-  return result;
+  /* const result = await User.find(query);
+  return result; */
+  const skip = (Number(query.page) - 1) * Number(query.limit);
+  const result = await User.find(searchQuery)
+    .sort({ _id: -1 })
+    .skip(skip)
+    .limit(Number(query.limit));
+  const totalCount = await User.countDocuments(searchQuery); // To get the total number of documents
+  return { users: result, totalCount };
 };
 const deleteSingleUserFromDB = async (id: string) => {
   const user = await User.findOne({ _id: id });

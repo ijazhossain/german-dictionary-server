@@ -35,6 +35,7 @@ const getAllWordFromDB = async (query: Record<string, unknown>) => {
 
   const skip = (Number(query.page) - 1) * Number(query.limit);
   const result = await Word.find(searchableQuery)
+    .sort({ _id: -1 })
     .skip(skip)
     .limit(Number(query.limit));
   const totalCount = await Word.countDocuments(searchableQuery); // To get the total number of documents
@@ -64,7 +65,7 @@ const getWordBySearchFromDB = async (query: Record<string, unknown>) => {
     ],
   };
 
-  const result = await Word.findOne(searchQuery);
+  const result = await Word.find(searchQuery);
 
   return { words: result };
 };
