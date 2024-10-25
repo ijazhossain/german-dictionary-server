@@ -93,6 +93,10 @@ const wordSchema = new Schema<TWord>({
       sie: { type: ConjugationSchema },
     },
   },
+  isCompleted: {
+    type: Boolean,
+    default: false,
+  },
   isDeleted: {
     type: Boolean,
     default: false,

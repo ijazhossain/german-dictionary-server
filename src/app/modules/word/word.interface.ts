@@ -61,5 +61,6 @@ export type TWord = {
       sie: TConjugation;
     };
   };
+  isCompleted: boolean;
   isDeleted: boolean;
 };
