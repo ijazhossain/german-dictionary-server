@@ -24,11 +24,11 @@ const wordDetailsSchema = new Schema<TWordDetails>({
   },
   germanExample: {
     type: String,
-    //required: [true, 'German meaning is required'],
+    required: [true, 'German meaning is required'],
   },
   banglaExample: {
     type: String,
-    //required: [true, 'Bangla example is required'],
+    required: [true, 'Bangla example is required'],
   },
   englishExample: {
     type: String,
@@ -97,23 +97,6 @@ const wordSchema = new Schema<TWord>({
     type: Boolean,
     default: false,
   },
-  isDeleted: {
-    type: Boolean,
-    default: false,
-  },
-});
-wordSchema.pre('find', function (next) {
-  this.find({ isDeleted: { $ne: true } });
-  next();
-});
-wordSchema.pre('findOne', async function (next) {
-  this.find({ isDeleted: { $ne: true } });
-
-  next();
 });
 
-wordSchema.pre('aggregate', function (next) {
-  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
-  next();
-});
 export const Word = model<TWord>('Word', wordSchema);

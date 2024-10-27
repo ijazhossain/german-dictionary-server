@@ -62,5 +62,4 @@ export type TWord = {
     };
   };
   isCompleted: boolean;
-  isDeleted: boolean;
 };

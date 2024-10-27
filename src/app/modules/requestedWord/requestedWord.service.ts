@@ -8,7 +8,10 @@ const createRequestedWordIntoDB = async (payload: TRequestedWord) => {
     requestedWord: payload.requestedWord,
   });
   if (isRequested) {
-    throw new AppError(httpStatus.BAD_REQUEST, 'User already exists!!');
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'Word is already requested by someone!!',
+    );
   }
   const result = await RequestedWord.create(payload);
   return result;

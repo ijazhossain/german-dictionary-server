@@ -86,11 +86,7 @@ const getSingleWordFromDB = async (id: string) => {
   return result;
 };
 const deleteSingleWordFromDB = async (id: string) => {
-  const result = await Word.findByIdAndUpdate(
-    id,
-    { isDeleted: true },
-    { new: true, runValidators: true },
-  );
+  const result = await Word.deleteOne({ _id: id });
   return result;
 };
 const updateSingleWordIntoDB = async (id: string, payload: Partial<TWord>) => {

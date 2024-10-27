@@ -34,6 +34,7 @@ router.delete(
 router.patch(
   '/word/:id',
   auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty),
+  validateRequest(WordValidations.updateWordValidationSchema),
   WordControllers.updateWord,
 );
 router.patch('/add-bookmark/:userId/:wordId', WordControllers.bookmarkWord);

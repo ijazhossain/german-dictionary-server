@@ -53,7 +53,9 @@ const userSchema = new Schema<TUser, UserModel>(
   },
 );
 userSchema.pre('find', function (next) {
-  this.find({ isDeleted: { $ne: true } });
+  this.find({
+    $and: [{ isDeleted: { $ne: true } }, { role: { $ne: 'superAdmin' } }],
+  });
   next();
 });
 userSchema.pre('findOne', async function (next) {
