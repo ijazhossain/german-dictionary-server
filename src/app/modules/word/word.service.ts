@@ -1,8 +1,20 @@
+import httpStatus from 'http-status';
+import AppError from '../../errors/AppError';
 import { User } from '../user/user.model';
 import { TWord } from './word.interface';
 import { Word } from './word.model';
 
 const createWordIntoDB = async (payload: TWord) => {
+  const isWordExists = await Word.find({
+    $and: [
+      { germanWord: payload.germanWord },
+      { partsOfSpeech: payload.partsOfSpeech },
+    ],
+  });
+  // console.log(isWordExists);
+  if (isWordExists.length) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Word is already exists!');
+  }
   const result = await Word.create(payload);
   return result;
 };

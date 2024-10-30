@@ -1,12 +1,6 @@
 import { model, Schema } from 'mongoose';
 
-import {
-  Articles,
-  PartsOfSpeech,
-  VerbCase,
-  VerbType,
-  WordLevel,
-} from './word.constants';
+import { Articles, PartsOfSpeech, VerbType, WordLevel } from './word.constants';
 import { TConjugation, TWord, TWordDetails } from './word.interface';
 const ConjugationSchema = new Schema<TConjugation>({
   german: { type: String },
@@ -24,15 +18,12 @@ const wordDetailsSchema = new Schema<TWordDetails>({
   },
   germanExample: {
     type: String,
-    required: [true, 'German meaning is required'],
   },
   banglaExample: {
     type: String,
-    required: [true, 'Bangla example is required'],
   },
   englishExample: {
     type: String,
-    required: [true, 'English example is required'],
   },
 });
 const wordSchema = new Schema<TWord>({
@@ -66,7 +57,6 @@ const wordSchema = new Schema<TWord>({
     },
   ],
   verbType: { type: String, enum: VerbType },
-  verbCase: { type: String, enum: VerbCase },
   verbConjugations: {
     präsens: {
       ich: { type: ConjugationSchema },

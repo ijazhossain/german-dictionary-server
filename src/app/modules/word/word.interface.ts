@@ -14,12 +14,11 @@ type TPartsOfSpeech =
 export type TWordDetails = {
   banglaMeaning: string;
   englishMeaning: string;
-  germanExample: string;
-  banglaExample: string;
-  englishExample: string;
+  germanExample?: string;
+  banglaExample?: string;
+  englishExample?: string;
 };
 export type TVerbType = 'regular' | 'irregular';
-export type TVerbCase = 'nominativ' | 'akkusativ' | 'dativ' | 'reflexive';
 export type TWordLevel = 'a1' | 'a2' | 'b1' | 'b2' | 'c1' | 'c2';
 export type TConjugation = {
   german?: string;
@@ -34,7 +33,6 @@ export type TWord = {
   article?: TArticle;
   details: [TWordDetails];
   verbType?: TVerbType;
-  verbCase?: TVerbCase;
   verbConjugations?: {
     präsens: {
       ich: TConjugation;
