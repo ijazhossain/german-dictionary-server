@@ -16,9 +16,17 @@ const createRequestedWordIntoDB = async (payload: TRequestedWord) => {
   const result = await RequestedWord.create(payload);
   return result;
 };
-const getAllRequestedWordFromDB = async () => {
-  const result = await RequestedWord.find({ isAdded: { $ne: true } });
-  return result;
+const getAllRequestedWordFromDB = async (query: Record<string, unknown>) => {
+  const searchQuery: Record<string, unknown> = {};
+  if (query?.status !== undefined && query?.status !== 'all') {
+    searchQuery.isAdded = query?.status;
+  }
+  const skip = (Number(query.page) - 1) * Number(query.limit);
+  const result = await RequestedWord.find(searchQuery)
+    .skip(skip)
+    .limit(Number(query.limit));
+  const totalCount = await RequestedWord.countDocuments(searchQuery); // To get the total number of documents
+  return { words: result, totalCount };
 };
 const deleteRequestedWordFromDB = async (id: string) => {
   const result = await RequestedWord.findByIdAndUpdate(id, { isAdded: true });

@@ -2,7 +2,7 @@ import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { TUser } from './user.interface';
 import { User } from './user.model';
-type TQuery = { role?: string; page?: string; limit?: string };
+type TQuery = { role?: string; page?: string; limit?: string; email?: string };
 const createUserIntoDB = async (payload: TUser) => {
   //   console.log(payload);
   const isUserExists = await User.findOne({ email: payload.email });
@@ -24,6 +24,9 @@ const getAllUsersFromDB = async (query: TQuery) => {
       );
     }
     searchQuery.role = query.role;
+  }
+  if (query?.email) {
+    searchQuery.email = query.email;
   }
   const skip = (Number(query.page) - 1) * Number(query.limit);
   const result = await User.find(searchQuery)
