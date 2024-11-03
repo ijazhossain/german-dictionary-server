@@ -60,6 +60,7 @@ const createWordValidationSchema = z.object({
     verbTypes: z.enum([...(VerbType as [string, ...string[]])]).optional(),
     verbConjugations: createConjugationValidationSchema.optional(),
     details: z.array(createWordDetailsValidationSchema),
+    userId: z.string(),
   }),
 });
 const updateWordValidationSchema = z.object({
@@ -73,6 +74,7 @@ const updateWordValidationSchema = z.object({
     verbTypes: z.enum([...(VerbType as [string, ...string[]])]).optional(),
     verbConjugations: createConjugationValidationSchema.optional(),
     details: z.array(updateWordDetailsValidationSchema).optional(),
+    userId: z.string().optional(),
   }),
 });
 export const WordValidations = {

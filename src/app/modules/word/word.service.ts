@@ -11,7 +11,6 @@ const createWordIntoDB = async (payload: TWord) => {
       { partsOfSpeech: payload.partsOfSpeech },
     ],
   });
-  // console.log(isWordExists);
   if (isWordExists.length) {
     throw new AppError(httpStatus.BAD_REQUEST, 'Word is already exists!');
   }
@@ -19,16 +18,14 @@ const createWordIntoDB = async (payload: TWord) => {
   return result;
 };
 const getAllWordFromDB = async (query: Record<string, unknown>) => {
-  let searchableQuery = {};
-  if ((query.searchQuery as string).length) {
-    searchableQuery = {
-      $or: [
-        {
-          germanWord: {
-            $regex: `^${query.searchQuery}$`,
-            $options: 'i',
-          },
-        },
+  let searchableQuery: Record<string, unknown> = {};
+
+  if (query.searchQuery || query.status !== undefined) {
+    const searchConditions = [];
+
+    if (query.searchQuery) {
+      searchConditions.push(
+        { germanWord: { $regex: `^${query.searchQuery}$`, $options: 'i' } },
         {
           'details.englishMeaning': {
             $regex: `^${query.searchQuery}$`,
@@ -41,18 +38,30 @@ const getAllWordFromDB = async (query: Record<string, unknown>) => {
             $options: 'i',
           },
         },
-      ],
+      );
+    }
+
+    searchableQuery = {
+      ...(searchConditions.length > 0 ? { $or: searchConditions } : {}),
+      ...(query.status !== undefined && query.status !== 'all'
+        ? { isCompleted: query.status }
+        : {}),
     };
   }
 
   const skip = (Number(query.page) - 1) * Number(query.limit);
+
   const result = await Word.find(searchableQuery)
     .sort({ _id: -1 })
     .skip(skip)
-    .limit(Number(query.limit));
-  const totalCount = await Word.countDocuments(searchableQuery); // To get the total number of documents
+    .limit(Number(query.limit))
+    .populate('userId');
+
+  const totalCount = await Word.countDocuments(searchableQuery);
+
   return { words: result, totalCount };
 };
+
 const getWordBySearchFromDB = async (query: Record<string, unknown>) => {
   const searchQuery = {
     $or: [
@@ -87,10 +96,22 @@ const getSuggestionsFromDB = async (query: string) => {
       {
         germanWord: { $regex: `^${query}`, $options: 'i' },
       },
+      {
+        'details.englishMeaning': {
+          $regex: `^${query}`,
+          $options: 'i',
+        },
+      }, // Exact case-insensitive match for English Meaning in details
+      {
+        'details.banglaMeaning': {
+          $regex: `^${query}`,
+          $options: 'i',
+        },
+      },
     ],
   })
     .limit(10)
-    .select({ germanWord: 1 });
+    .select({ germanWord: 1, details: 1 });
   return result;
 };
 const getSingleWordFromDB = async (id: string) => {

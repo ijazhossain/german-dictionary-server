@@ -26,10 +26,15 @@ const loginUser = async (payload: TLoginUser) => {
     throw new AppError(httpStatus.NOT_FOUND, 'Password does not match!');
   }
   const jwtPayload = {
+    name: {
+      firstName: user.name.firstName,
+      lastName: user.name.lastName,
+    },
     userId: user._id,
     email: user.email,
     role: user.role,
   };
+
   const accessToken = createToken(
     jwtPayload,
     config.jwt_access_secret as string,
@@ -43,7 +48,6 @@ const changePassword = async (
   userData: JwtPayload,
   payload: { oldPassword: string; newPassword: string },
 ) => {
-  // console.log({ payload });
   const user = await User.findOne({ _id: userData.userId }).select('+password');
 
   if (!user) {

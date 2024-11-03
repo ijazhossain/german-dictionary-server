@@ -1,3 +1,5 @@
+import { Types } from 'mongoose';
+
 type TArticle = 'der' | 'die' | 'das';
 type TPartsOfSpeech =
   | 'nomen'
@@ -59,5 +61,6 @@ export type TWord = {
       sie: TConjugation;
     };
   };
+  userId: Types.ObjectId;
   isCompleted: boolean;
 };

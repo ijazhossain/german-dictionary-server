@@ -19,12 +19,7 @@ router.get(
 );
 router.get(
   '/user/:email',
-  auth(
-    USER_ROLE.superAdmin,
-    USER_ROLE.admin,
-    USER_ROLE.faculty,
-    USER_ROLE.student,
-  ),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   UserControllers.getSingleUser,
 );
 router.delete(
