@@ -18,9 +18,14 @@ const createWordIntoDB = async (payload: TWord) => {
   return result;
 };
 const getAllWordFromDB = async (query: Record<string, unknown>) => {
+  console.log(query);
   let searchableQuery: Record<string, unknown> = {};
 
-  if (query.searchQuery || query.status !== undefined) {
+  if (
+    query.searchQuery ||
+    query.status !== undefined ||
+    query.approval !== undefined
+  ) {
     const searchConditions = [];
 
     if (query.searchQuery) {
@@ -45,6 +50,9 @@ const getAllWordFromDB = async (query: Record<string, unknown>) => {
       ...(searchConditions.length > 0 ? { $or: searchConditions } : {}),
       ...(query.status !== undefined && query.status !== 'all'
         ? { isCompleted: query.status }
+        : {}),
+      ...(query.approval !== undefined && query.approval !== 'all'
+        ? { supperAdminApproval: query.approval }
         : {}),
     };
   }
