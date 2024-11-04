@@ -209,6 +209,12 @@ const generateQuizFromDB = async () => {
 
   return questions.flat(); // Flatten the array of questions
 };
+const approveWordIntoDB = async (id: string) => {
+  const result = await Word.findByIdAndUpdate(id, {
+    supperAdminApproval: true,
+  });
+  return result;
+};
 
 export const WordServices = {
   createWordIntoDB,
@@ -222,4 +228,5 @@ export const WordServices = {
   removeBookmarkFromDB,
   getSingleBookmarkDetailsFromDB,
   generateQuizFromDB,
+  approveWordIntoDB,
 };

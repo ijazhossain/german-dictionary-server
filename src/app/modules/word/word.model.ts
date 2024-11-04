@@ -89,6 +89,10 @@ const wordSchema = new Schema<TWord>(
       required: [true, 'User id is required'],
       ref: 'User',
     },
+    supperAdminApproval: {
+      type: Boolean,
+      default: false,
+    },
     isCompleted: {
       type: Boolean,
       default: false,

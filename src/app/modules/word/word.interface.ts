@@ -35,6 +35,7 @@ export type TWord = {
   article?: TArticle;
   details: [TWordDetails];
   verbType?: TVerbType;
+  supperAdminApproval: boolean;
   verbConjugations?: {
     präsens: {
       ich: TConjugation;

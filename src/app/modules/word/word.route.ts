@@ -47,4 +47,5 @@ router.get(
   WordControllers.getSingleBookmarkDetails,
 );
 router.get('/generate-quiz', WordControllers.generateQuiz);
+router.patch('/approve-word/:id', WordControllers.approveWord);
 export const WordRoutes = router;

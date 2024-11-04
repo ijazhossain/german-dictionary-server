@@ -118,6 +118,16 @@ const generateQuiz = catchAsync(async (req, res) => {
     data: questions,
   });
 });
+const approveWord = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await WordServices.approveWordIntoDB(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Word is approved by admin',
+    data: result,
+  });
+});
 export const WordControllers = {
   createWord,
   getAllWord,
@@ -130,4 +140,5 @@ export const WordControllers = {
   removeBookmarkWord,
   getSingleBookmarkDetails,
   generateQuiz,
+  approveWord,
 };
