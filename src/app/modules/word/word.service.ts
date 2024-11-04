@@ -3,6 +3,7 @@ import AppError from '../../errors/AppError';
 import { User } from '../user/user.model';
 import { TWord } from './word.interface';
 import { Word } from './word.model';
+import { RequestedWord } from '../requestedWord/requestedWord.model';
 
 const createWordIntoDB = async (payload: TWord) => {
   const isWordExists = await Word.find({
@@ -18,7 +19,7 @@ const createWordIntoDB = async (payload: TWord) => {
   return result;
 };
 const getAllWordFromDB = async (query: Record<string, unknown>) => {
-  console.log(query);
+  // console.log(query);
   let searchableQuery: Record<string, unknown> = {};
 
   if (
@@ -223,6 +224,92 @@ const approveWordIntoDB = async (id: string) => {
   });
   return result;
 };
+const getWordsByDateFromDB = async () => {
+  // Step 1: Find all faculty and admin users and their details
+  const facultyAndAdminUsers = await User.find({
+    role: { $in: ['faculty', 'admin'] },
+  }).select('name email');
+
+  // Step 2: Aggregate word counts by user and date
+  const wordCounts = await Word.aggregate([
+    {
+      $match: { userId: { $in: facultyAndAdminUsers.map((user) => user._id) } },
+    },
+    {
+      $group: {
+        _id: {
+          userId: '$userId',
+          date: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+        },
+        count: { $sum: 1 },
+      },
+    },
+    { $sort: { '_id.date': 1 } },
+  ]);
+
+  // Step 3: Count total words in the Word model
+  const totalWordCount = await Word.countDocuments();
+
+  // Step 4: Count total users in the User model
+  const totalUserCount = await User.countDocuments();
+
+  // Step 5: Count total users based on role
+  const totalAdminCount = await User.countDocuments({ role: 'admin' });
+  const totalFacultyCount = await User.countDocuments({ role: 'faculty' });
+  const totalUserCountByRole = await User.countDocuments({ role: 'user' });
+
+  // Step 6: Count total requested words
+  const totalRequestedWords = await RequestedWord.countDocuments();
+
+  // Step 7: Count total requested words based on isAdded status
+  const totalRequestedWordsTrue = await RequestedWord.countDocuments({
+    isAdded: true,
+  });
+  const totalRequestedWordsFalse = await RequestedWord.countDocuments({
+    isAdded: false,
+  });
+
+  // Step 8: Count total words based on isCompleted status
+  const totalWordsCompleted = await Word.countDocuments({ isCompleted: true });
+  const totalWordsNotCompleted = await Word.countDocuments({
+    isCompleted: false,
+  });
+
+  // Step 9: Format results by associating counts with faculty and admin details
+  const result = facultyAndAdminUsers.map((user) => {
+    const userWordCounts = wordCounts
+      .filter((count) => count._id.userId.equals(user._id))
+      .map((count) => ({ date: count._id.date, count: count.count }));
+    const totalUserWordCount = userWordCounts.reduce(
+      (sum, entry) => sum + entry.count,
+      0,
+    );
+
+    return {
+      user: {
+        name: user.name,
+        email: user.email,
+        _id: user._id,
+      },
+      totalWordCount: totalUserWordCount,
+      wordCountsByDate: userWordCounts,
+    };
+  });
+
+  return {
+    result,
+    totalWordCount,
+    totalUserCount,
+    totalAdminCount,
+    totalFacultyCount,
+    totalUserCountByRole,
+    totalRequestedWords,
+    totalRequestedWordsTrue,
+    totalRequestedWordsFalse,
+    totalWordsCompleted,
+    totalWordsNotCompleted,
+  };
+};
 
 export const WordServices = {
   createWordIntoDB,
@@ -237,4 +324,5 @@ export const WordServices = {
   getSingleBookmarkDetailsFromDB,
   generateQuizFromDB,
   approveWordIntoDB,
+  getWordsByDateFromDB,
 };

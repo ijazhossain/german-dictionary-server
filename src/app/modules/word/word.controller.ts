@@ -128,6 +128,16 @@ const approveWord = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getFacultyWordsByDate = catchAsync(async (req, res) => {
+  const result = await WordServices.getWordsByDateFromDB();
+  // console.log(result);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Word is retrieved by date',
+    data: result,
+  });
+});
 export const WordControllers = {
   createWord,
   getAllWord,
@@ -141,4 +151,5 @@ export const WordControllers = {
   getSingleBookmarkDetails,
   generateQuiz,
   approveWord,
+  getFacultyWordsByDate,
 };

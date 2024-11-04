@@ -47,5 +47,10 @@ router.get(
   WordControllers.getSingleBookmarkDetails,
 );
 router.get('/generate-quiz', WordControllers.generateQuiz);
-router.patch('/approve-word/:id', WordControllers.approveWord);
+router.patch(
+  '/approve-word/:id',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+  WordControllers.approveWord,
+);
+router.get('/dashboard-word-count', WordControllers.getFacultyWordsByDate);
 export const WordRoutes = router;
